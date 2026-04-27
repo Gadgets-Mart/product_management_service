@@ -43,6 +43,20 @@ public class ProductController {
         return new ResponseEntity<>(prod,HttpStatus.OK);
     }
 
+    @GetMapping("/productCategory/{category}")
+    public ResponseEntity<?> getProductByCategory(@PathVariable("category") String category){
+        List<ProductsResponseDto> list = service.findByCategory(category);
+        if(list.isEmpty())return new ResponseEntity<>("Not a valid category",HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
+    @GetMapping("/productSearch/{search}")
+    public ResponseEntity<?> searchProduct(@PathVariable("search") String search){
+        List<ProductsResponseDto> list = service.searchProduct(search);
+        if(list.isEmpty())return new ResponseEntity<>("No items available for the keyword",HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(list,HttpStatus.OK);
+    }
+
     @DeleteMapping("/product/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") int id){
         ProductResponseDto prod=service.deleteProduct(id);

@@ -135,4 +135,52 @@ public class ProductService {
                 .imageCount(pro.getImages().size())
                 .build();
     }
+
+    public List<ProductsResponseDto> findByCategory(String category) {
+        List<Product> li = repo.findByCategory(category);
+        List<ProductsResponseDto> res = new ArrayList<>();
+        for(Product p:li){
+            ProductsResponseDto dto=ProductsResponseDto
+                    .builder()
+                    .name(p.getName())
+                    .id(p.getId())
+                    .category(p.getCategory())
+                    .brand(p.getBrand())
+                    .price(p.getPrice())
+                    .discount_price(p.getDiscount_price())
+                    .rating(p.getRating())
+                    .in_stock(p.isIn_stock())
+                    .description(p.getDescription())
+                    .created_at(p.getCreated_at())
+                    .colors(p.getColors())
+                    .imageCount(p.getImages().size())
+                    .build();
+            res.add(dto);
+        }
+        return res;
+    }
+
+    public List<ProductsResponseDto> searchProduct(String search) {
+        List<Product> li = repo.searchProduct(search);
+        List<ProductsResponseDto> res = new ArrayList<>();
+        for(Product p:li){
+            ProductsResponseDto dto=ProductsResponseDto
+                    .builder()
+                    .name(p.getName())
+                    .id(p.getId())
+                    .category(p.getCategory())
+                    .brand(p.getBrand())
+                    .price(p.getPrice())
+                    .discount_price(p.getDiscount_price())
+                    .rating(p.getRating())
+                    .in_stock(p.isIn_stock())
+                    .description(p.getDescription())
+                    .created_at(p.getCreated_at())
+                    .colors(p.getColors())
+                    .imageCount(p.getImages().size())
+                    .build();
+            res.add(dto);
+        }
+        return res;
+    }
 }
