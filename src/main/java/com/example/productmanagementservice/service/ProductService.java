@@ -1,6 +1,7 @@
 package com.example.productmanagementservice.service;
 
 import com.example.productmanagementservice.dto.productDto.ProductResponseDto;
+import com.example.productmanagementservice.dto.productDto.ProductUpdateDto;
 import com.example.productmanagementservice.dto.productDto.ProductsResponseDto;
 import com.example.productmanagementservice.model.Product;
 import com.example.productmanagementservice.model.ProductImage;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -53,7 +55,6 @@ public class ProductService {
                     .colors(p.getColors())
                     .imageCount(p.getImages().size())
                     .build();
-            System.out.println(dto);
             res.add(dto);
         }
         return res;
@@ -86,5 +87,52 @@ public class ProductService {
         ProductResponseDto res = new ProductResponseDto(p.getName(),p.getId());
         repo.delete(p);
         return res;
+    }
+
+    public ProductsResponseDto updateProduct(int id, ProductUpdateDto prod, MultipartFile[] images) throws IOException {
+        Optional<Product> p = repo.findById(id);
+        if(p.isEmpty())return null;
+        Product pro = p.get();
+
+        if(images!=null){
+            List<ProductImage> list=new ArrayList<>();
+            for(MultipartFile image:images){
+                ProductImage pd = new ProductImage();
+                pd.setImageName(image.getOriginalFilename());
+                pd.setContentType(image.getContentType());
+                pd.setImage(image.getBytes());
+                list.add(pd);
+            }
+            pro.setImages(list);
+        }
+        if(prod!=null){
+            if(prod.getName()!=null)pro.setName(prod.getName());
+            if(prod.getCategory()!=null)pro.setCategory(prod.getCategory());
+            if(prod.getBrand()!=null)pro.setBrand(prod.getBrand());
+            if(prod.getPrice()!=null)pro.setPrice(prod.getPrice());
+            if(prod.getDiscount_price()!=null)pro.setDiscount_price(prod.getDiscount_price());
+            if(prod.getRating()!=null)pro.setRating(prod.getRating());
+            if(prod.getIn_stock()!=null)pro.setIn_stock(prod.getIn_stock());
+            if(prod.getDescription()!=null)pro.setDescription(prod.getDescription());
+            if(prod.getCreated_at()!=null)pro.setCreated_at(prod.getCreated_at());
+            if(prod.getColors()!=null)pro.setColors(prod.getColors());
+        }
+
+        repo.save(pro);
+        return ProductsResponseDto
+                .builder()
+                .name(pro.getName())
+                .id(pro.getId())
+                .category(pro.getCategory())
+                .brand(pro.getBrand())
+                .price(pro.getPrice())
+                .discount_price(pro.getDiscount_price())
+                .rating(pro.getRating())
+                .in_stock(pro.isIn_stock())
+                .description(pro.getDescription())
+                .created_at(pro.getCreated_at())
+                .colors(pro.getColors())
+                .imageCount(pro.getImages().size())
+                .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.productmanagementservice.controller;
 
 import com.example.productmanagementservice.dto.productDto.ProductResponseDto;
+import com.example.productmanagementservice.dto.productDto.ProductUpdateDto;
 import com.example.productmanagementservice.dto.productDto.ProductsResponseDto;
 import com.example.productmanagementservice.model.Product;
 import com.example.productmanagementservice.service.ProductService;
@@ -19,38 +20,44 @@ public class ProductController {
     ProductService service;
 
     @PostMapping("/product")
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestPart Product product,@RequestPart MultipartFile[] images){
+    public ResponseEntity<?> addProduct(@RequestPart Product product,@RequestPart MultipartFile[] images){
         try{
             ProductResponseDto pd = service.addProduct(product,images);
             return new ResponseEntity<>(pd, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(new ProductResponseDto("Failed:"+e.getMessage(),-1),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error saving the Images",HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductsResponseDto>> getProducts(){
+    public ResponseEntity<?> getProducts(){
        List<ProductsResponseDto> list=service.findAll();
-       if(list.size()>0)return new ResponseEntity<>(list,HttpStatus.OK);
-       return new ResponseEntity<>(list,HttpStatus.NOT_FOUND);
+       if(!list.isEmpty())return new ResponseEntity<>(list,HttpStatus.OK);
+       return new ResponseEntity<>("No products present",HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<ProductsResponseDto> getProductById(@PathVariable("id") int id){
+    public ResponseEntity<?> getProductById(@PathVariable("id") int id){
         ProductsResponseDto prod=service.getProductById(id);
-        if(prod==null)return new ResponseEntity<>(prod,HttpStatus.NOT_FOUND);
+        if(prod==null)return new ResponseEntity<>("Id is invalid",HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(prod,HttpStatus.OK);
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity<ProductResponseDto> deleteProduct(@PathVariable("id") int id){
+    public ResponseEntity<?> deleteProduct(@PathVariable("id") int id){
         ProductResponseDto prod=service.deleteProduct(id);
-        if(prod==null)return new ResponseEntity<>(prod,HttpStatus.NOT_FOUND);
+        if(prod==null)return new ResponseEntity<>("Id is invalid",HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(prod,HttpStatus.OK);
     }
 
-//    @PatchMapping("/product/{id}")
-//    public ResponseEntity<ProductsResponseDto> updateProduct(@PathVariable("id") int id){
-//
-//    }
+    @PatchMapping("/product/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable("id") int id, @RequestPart(required = false) ProductUpdateDto product, @RequestPart(required = false) MultipartFile[] images){
+        try{
+            ProductsResponseDto pd = service.updateProduct(id,product,images);
+            if(pd==null) return new ResponseEntity<>("Id is invalid",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(pd,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Error saving the Images",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
