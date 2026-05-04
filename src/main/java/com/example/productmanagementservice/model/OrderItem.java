@@ -24,11 +24,11 @@ public class OrderItem {
     private Order order;
 
     @Column(name = "product_id", nullable = false)
-    private Long productId;
+    private Integer productId;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal priceAtPurchase;
+    @Column(name="price_at_purchase")
+    private Double priceAtPurchase;
 }

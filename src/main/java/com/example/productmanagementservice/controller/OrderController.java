@@ -1,10 +1,13 @@
 package com.example.productmanagementservice.controller;
 
-import com.example.productmanagementservice.model.Order;
+import com.example.productmanagementservice.dto.OrderDto.OrderRequestDTO;
+import com.example.productmanagementservice.dto.OrderDto.OrderResponseDTO;
 import com.example.productmanagementservice.model.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import  java.util.*;
 import com.example.productmanagementservice.service.OrderService;
@@ -17,22 +20,36 @@ public class OrderController {
     OrderService service;
 
     @GetMapping("/{id}")
-    public Order getOrder(@PathVariable Long id){
-         return service.getOrders(id);
+    public ResponseEntity<?> getOrder(@PathVariable Long id){
+        OrderResponseDTO savedOrder=service.getOrderById(id);
+        return ResponseEntity.ok(savedOrder) ;
     }
 
     @PostMapping
-    public Order createOrder(@RequestBody Order order){
-         return service.createOrder(order);
+    public ResponseEntity<?> createOrder(@RequestBody OrderRequestDTO order){
+
+            OrderResponseDTO savedOrder = service.createOrder(order);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedOrder);
+
     }
 
+
     @PutMapping("/{id}/cancel")
-    public Order cancelOrder(@PathVariable Long id){
-        return  service.cancelOrder(id);
+    public ResponseEntity<?> cancelOrder(@PathVariable Long id){
+        OrderResponseDTO savedOrder=service.cancelOrder(id);
+        return savedOrder!=null ? ResponseEntity.ok(savedOrder) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unable to cancel Order ");
+
     }
 
     @PatchMapping("/{id}/status")
-    public Order updateStatus(@PathVariable Long id, @RequestParam OrderStatus status){
-        return  service.updateStatus(id,status);
+    public ResponseEntity<?> updateStatus(@PathVariable Long id, @RequestParam OrderStatus status){
+        OrderResponseDTO savedOrder=service.updateStatus(id,status);
+        return savedOrder!=null ? ResponseEntity.ok(savedOrder) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Unable to update Order status.");
+    }
+
+    @GetMapping("user/{userId}")
+    public ResponseEntity<List<OrderResponseDTO>> getHistory(@PathVariable String userId){
+        List<OrderResponseDTO> history=service.getOrderHistory(userId);
+        return ResponseEntity.ok(history);
     }
 }

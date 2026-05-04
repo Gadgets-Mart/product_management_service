@@ -20,7 +20,7 @@ public class Order {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal; // Sum of all items before tax/shipping
