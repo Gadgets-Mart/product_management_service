@@ -17,7 +17,7 @@ public class TokenValidationService {
     ){
         try {
             return webClient.get()
-                    .uri("http://localhost:8081/api/auth/validate_token")
+                    .uri("http://localhost:8000/api/auth/validate_token")
                     .header("Authorization", "Bearer " + token)
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
