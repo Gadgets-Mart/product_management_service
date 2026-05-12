@@ -5,6 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class ProductUpdateDto {
@@ -18,4 +19,5 @@ public class ProductUpdateDto {
     private String description;
     private LocalDate created_at;
     private List<String> colors;
+    private Map<String,String> specifications;
 }

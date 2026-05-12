@@ -6,6 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -22,6 +23,7 @@ public class ProductsResponseDto {
     LocalDate created_at;
     List<String> colors;
     int imageCount;
+    Map<String,String> specifications;
 
     public String toString(){
         return name;

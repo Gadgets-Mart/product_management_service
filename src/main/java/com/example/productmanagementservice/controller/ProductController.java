@@ -4,9 +4,11 @@ import com.example.productmanagementservice.dto.productDto.ProductResponseDto;
 import com.example.productmanagementservice.dto.productDto.ProductUpdateDto;
 import com.example.productmanagementservice.dto.productDto.ProductsResponseDto;
 import com.example.productmanagementservice.model.Product;
+import com.example.productmanagementservice.model.ProductImage;
 import com.example.productmanagementservice.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +31,18 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/productImage/{id}/{imageId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int id,@PathVariable int imageId){
+        ProductImage image = service.getProductImage(id,imageId);
+        if(image!=null){
+//            System.out.println(image.getContentType());
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getContentType())).body(image.getImage());
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
     @GetMapping("/products")
     public ResponseEntity<?> getProducts(){
+        System.out.println("Get called");
        List<ProductsResponseDto> list=service.findAll();
        if(!list.isEmpty())return new ResponseEntity<>(list,HttpStatus.OK);
        return new ResponseEntity<>("No products present",HttpStatus.NOT_FOUND);
@@ -54,6 +66,7 @@ public class ProductController {
     public ResponseEntity<?> searchProduct(@PathVariable("search") String search){
         List<ProductsResponseDto> list = service.searchProduct(search);
         if(list.isEmpty())return new ResponseEntity<>("No items available for the keyword",HttpStatus.NOT_FOUND);
+        System.out.println("Searched "+search);
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 

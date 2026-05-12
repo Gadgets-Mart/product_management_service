@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
@@ -33,4 +34,6 @@ public class Product {
     private List<String> colors;
     @ElementCollection
     private List<ProductImage> images;
+    @ElementCollection
+    private Map<String,String> specifications;
 }

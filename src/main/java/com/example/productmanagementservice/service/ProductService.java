@@ -1,5 +1,6 @@
 package com.example.productmanagementservice.service;
 
+import com.example.productmanagementservice.controller.ProductController;
 import com.example.productmanagementservice.dto.productDto.ProductResponseDto;
 import com.example.productmanagementservice.dto.productDto.ProductUpdateDto;
 import com.example.productmanagementservice.dto.productDto.ProductsResponseDto;
@@ -54,6 +55,7 @@ public class ProductService {
                     .created_at(p.getCreated_at())
                     .colors(p.getColors())
                     .imageCount(p.getImages().size())
+                    .specifications(p.getSpecifications())
                     .build();
             res.add(dto);
         }
@@ -77,6 +79,7 @@ public class ProductService {
                 .created_at(p.getCreated_at())
                 .colors(p.getColors())
                 .imageCount(p.getImages().size())
+                .specifications(p.getSpecifications())
                 .build();
     }
 
@@ -116,6 +119,7 @@ public class ProductService {
             if(prod.getDescription()!=null)pro.setDescription(prod.getDescription());
             if(prod.getCreated_at()!=null)pro.setCreated_at(prod.getCreated_at());
             if(prod.getColors()!=null)pro.setColors(prod.getColors());
+            if(prod.getSpecifications()!=null)pro.setSpecifications(prod.getSpecifications());
         }
 
         repo.save(pro);
@@ -133,6 +137,7 @@ public class ProductService {
                 .created_at(pro.getCreated_at())
                 .colors(pro.getColors())
                 .imageCount(pro.getImages().size())
+                .specifications(pro.getSpecifications())
                 .build();
     }
 
@@ -154,6 +159,7 @@ public class ProductService {
                     .created_at(p.getCreated_at())
                     .colors(p.getColors())
                     .imageCount(p.getImages().size())
+                    .specifications(p.getSpecifications())
                     .build();
             res.add(dto);
         }
@@ -178,9 +184,17 @@ public class ProductService {
                     .created_at(p.getCreated_at())
                     .colors(p.getColors())
                     .imageCount(p.getImages().size())
+                    .specifications(p.getSpecifications())
                     .build();
             res.add(dto);
         }
         return res;
+    }
+
+    public ProductImage getProductImage(int id, int image) {
+        Optional<Product> p = repo.findById(id);
+        if(p.isEmpty())return null;
+        Product prod = p.get();
+        return prod.getImages().get(image);
     }
 }
