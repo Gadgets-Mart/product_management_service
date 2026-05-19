@@ -18,7 +18,10 @@ public class OrderController {
 
     @Autowired
     OrderService service;
-
+    @GetMapping("/ordersList")
+    public ResponseEntity<?> getAllOrders(){
+        return service.getAllOrders();
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrder(@PathVariable Long id){
         OrderResponseDTO savedOrder=service.getOrderById(id);

@@ -11,6 +11,7 @@ import com.example.productmanagementservice.dto.OrderDto.OrderRequestDTO;
 import com.example.productmanagementservice.repository.OrderRepository;
 import com.example.productmanagementservice.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,5 +126,10 @@ public class OrderService {
         return orders.stream()
                 .map(this::mapToResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    public ResponseEntity<?> getAllOrders() {
+        List<Order> res = repo.findAll();
+        return ResponseEntity.ok(res);
     }
 }
