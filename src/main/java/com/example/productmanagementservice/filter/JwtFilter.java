@@ -22,11 +22,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final TokenValidationService tokenValidationService;
 
-//    @Override
-//    public boolean shouldNotFilter(HttpServletRequest request){
-//        String requestUrl=request.getServletPath();
-//        return  requestUrl.contains("/product_api");
-//    }
+    @Override
+    public boolean shouldNotFilter(HttpServletRequest request){
+        String requestUrl=request.getServletPath();
+        return  requestUrl.contains("/api/rating/get");
+    }
 
 
 
@@ -48,7 +48,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String token=auth.substring(7);
         String email=null;
         TokenValidationResponseDto responseDto=tokenValidationService.tokenValidationResponseDto(token);
-        System.out.println(responseDto.getRole());
          if(!responseDto.isValid()){
              response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
              response.getWriter().write("Token is invalid or expired");
