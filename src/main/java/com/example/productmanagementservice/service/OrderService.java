@@ -61,7 +61,7 @@ public class OrderService {
                 item.setQuantity(itemDto.getQuantity());
 
                 // 2. Set the REAL price from the database, NOT a mock value
-                double realPrice = product.getPrice();
+                double realPrice = product.getDiscount_price();
                 item.setPriceAtPurchase(realPrice);
 
                 // 3. Calculate subtotal using the real price
