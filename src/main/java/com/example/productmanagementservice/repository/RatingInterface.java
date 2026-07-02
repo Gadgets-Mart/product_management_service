@@ -8,8 +8,7 @@ import java.util.List;
 
 @Repository
 public interface RatingInterface extends JpaRepository<Rating,String> {
-
-
+    Rating findByUserId(String userId);
     List<Rating>  findByProductId(String productId);
 
 }

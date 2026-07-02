@@ -19,6 +19,14 @@ public class RatingService {
 
 
     public RatingResponseDto addRating(RatingRequestDto dto) {
+
+        Rating userRating = repo.findByUserId(dto.getUserId());
+        if(userRating != null){
+            userRating.setRating(dto.getRating());
+            userRating.setText(dto.getText());
+            repo.save(userRating);
+            return mapToResponse(userRating);
+        }
         Rating rating = new Rating();
         rating.setUserId(dto.getUserId());
         rating.setProductId(dto.getProductId());
